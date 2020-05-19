@@ -24,7 +24,7 @@ public class SCMInfoMojo extends AbstractMojo {
 	
 	private static final String START = "$URL: ";
 	private static final String END = " $";
-	private static final String NEW_POM = ".update.pom.xml";
+	private static final String NEW_POM = ".updated-pom.xml";
 	
     /**
      * The Maven Project.
