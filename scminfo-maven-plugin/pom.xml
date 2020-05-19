@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.mfjassociates.maven</groupId>
+  <artifactId>scminfo-maven-plugin</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <parent>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>mojo-parent</artifactId>
+    <version>50</version>
+  </parent>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>flatten-maven-plugin</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>3.2.5</version>
+    </dependency>
+  </dependencies>
+  <packaging>maven-plugin</packaging>
+</project>

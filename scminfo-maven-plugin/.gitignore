@@ -1,0 +1,7 @@
+/target/
+.project
+.classpath
+.factorypath
+.settings
+.flattened-pom.xml
+.updated-pom.xml
