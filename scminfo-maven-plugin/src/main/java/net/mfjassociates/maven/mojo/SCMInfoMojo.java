@@ -7,14 +7,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
-import org.apache.maven.model.building.DefaultModelBuilder;
-import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.io.DefaultModelReader;
 import org.apache.maven.model.io.DefaultModelWriter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -22,8 +19,6 @@ import org.apache.maven.project.MavenProject;
 @Mojo(name="getinfo")
 public class SCMInfoMojo extends AbstractMojo {
 	
-	private static final String START = "$URL: ";
-	private static final String END = " $";
 	private static final String NEW_POM = ".updated-pom.xml";
 	
     /**
@@ -32,9 +27,13 @@ public class SCMInfoMojo extends AbstractMojo {
     @Parameter( defaultValue = "${project}", readonly = true, required = true )
     private MavenProject project;
 
-    @Component(role = ModelBuilder.class)
-    private DefaultModelBuilder defaultModelBuilder;
+    @Parameter( defaultValue = "svn", readonly = true, required = true )
+    private String scmtype;
     
+    private enum SUPPORTED_SCMTYPES {
+    	svn
+    }
+
     public void execute() throws MojoExecutionException, MojoFailureException {
     	try {
 			updatePom();
@@ -45,21 +44,38 @@ public class SCMInfoMojo extends AbstractMojo {
 		
 	}
 	
-	private void updatePom() throws IOException {
+	private void updatePom() throws IOException, MojoFailureException {
+		SUPPORTED_SCMTYPES myscmtype;
+		try {
+			myscmtype = SUPPORTED_SCMTYPES.valueOf(scmtype);
+		} catch (IllegalArgumentException e) {
+			throw new MojoFailureException("The SCM type '"+scmtype+"' is not supported by this mojo");
+		}
 		DefaultModelReader reader=new DefaultModelReader();
 		Model m=reader.read(project.getFile(), null);
 		Scm scm = m.getScm();
 		AtomicBoolean updated=new AtomicBoolean(false);
 		if (scm!=null) {
-			scm.setUrl(reformat(scm.getUrl(), START, END, "", updated));
-			scm.setDeveloperConnection(reformat(scm.getDeveloperConnection(), START, END, "scm:svn:", updated));
-			scm.setConnection(reformat(scm.getConnection(), START, END, "scm:svn:", updated));
+			switch (myscmtype) {
+			case svn:
+				updateSVN(scm, updated);
+				break;
+			// default case is not required because it will fail before getting here if the scmtype is not in the enum
+			}
 			DefaultModelWriter writer=new DefaultModelWriter();
 			File updatedPom=project.getFile().toPath().resolveSibling(NEW_POM).toFile();
 			writer.write(updatedPom, null, m);
 			project.setPomFile(updatedPom);
 			if (updated.get()) getLog().info("Updated pom file for "+m.getArtifactId()+" into "+updatedPom.getName());
 		}
+	}
+
+	private static final String SVN_START = "$URL: ";
+	private static final String SVN_END = " $";
+	private void updateSVN(Scm scm, AtomicBoolean updated) {
+		scm.setUrl(reformat(scm.getUrl(), SVN_START, SVN_END, "", updated));
+		scm.setDeveloperConnection(reformat(scm.getDeveloperConnection(), SVN_START, SVN_END, "scm:svn:", updated));
+		scm.setConnection(reformat(scm.getConnection(), SVN_START, SVN_END, "scm:svn:", updated));
 	}
 
 	// $URL: http://cbsasvnserver1.omega.dce-eir.net/apps/dcscripts/branches/DevCenterWork/maven/du-template/trunk/pom.xml $
@@ -73,8 +89,14 @@ public class SCMInfoMojo extends AbstractMojo {
 		}
 		return result;
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) throws MojoFailureException {
 		SCMInfoMojo a = new SCMInfoMojo();
-		System.out.println(a.reformat("$URL: http://cbsasvnserver1.omega.dce-eir.net/apps/dcscripts/branches/DevCenterWork/maven/du-template/trunk/pom.xml $", START, END, "", new AtomicBoolean(false)));
+		String scmtype="svn";
+		try {
+			SUPPORTED_SCMTYPES t = SUPPORTED_SCMTYPES.valueOf(scmtype);
+		} catch (IllegalArgumentException e) {
+			throw new MojoFailureException("The SCM type '"+scmtype+"' is not supported by this mojo");
+		}
+		System.out.println(a.reformat("$URL: http://cbsasvnserver1.omega.dce-eir.net/apps/dcscripts/branches/DevCenterWork/maven/du-template/trunk/pom.xml $", SVN_START, SVN_END, "", new AtomicBoolean(false)));
 	}
 }
