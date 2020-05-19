@@ -19,4 +19,34 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <properties>
+  	<revision>1.0</revision>
+  	<sha1>0</sha1>
+  	<changelist>-SNAPSHOT</changelist>
+  </properties>
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.codehaus.mojo</groupId>
+  			<artifactId>flatten-maven-plugin</artifactId>
+  			<version>1.2.2</version>
+  			<executions>
+  				<execution>
+  					<id>flatten</id>
+  					<phase>process-resources</phase>
+  					<goals>
+  						<goal>flatten</goal>
+  					</goals>
+  				</execution>
+  				<execution>
+  					<id>flatten.clear</id>
+  					<phase>clean</phase>
+  					<goals>
+  						<goal>clean</goal>
+  					</goals>
+  				</execution>
+  			</executions>
+  		</plugin>
+  	</plugins>
+  </build>
 </project>
