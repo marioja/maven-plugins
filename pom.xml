@@ -23,7 +23,7 @@
 	</dependencyManagement>
 	<properties>
 		<revision>1.0</revision>
-		<sha1>0</sha1>
+		<sha1>1</sha1>
 		<changelist>-SNAPSHOT</changelist>
 	</properties>
 	<url>http://github.com/marioja/maven-plugins/</url>
@@ -56,6 +56,23 @@
 		</repository>
 	</distributionManagement>
 	<build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.6.0</version>
+          <executions>
+            <execution>
+              <id>help-mojo</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
