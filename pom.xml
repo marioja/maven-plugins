@@ -105,6 +105,9 @@
 						<goals>
 							<goal>flatten</goal>
 						</goals>
+						<configuration>
+							<flattenMode>oss</flattenMode>
+						</configuration>
 					</execution>
 					<execution>
 						<id>flatten.clear</id>
