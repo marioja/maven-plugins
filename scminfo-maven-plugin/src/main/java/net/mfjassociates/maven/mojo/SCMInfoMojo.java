@@ -48,7 +48,7 @@ public class SCMInfoMojo extends AbstractMojo {
 	 * The type of SCM to use for updating the {@link Model#getScm() scm}
 	 * information. The default and only supported type as of now is 'svn'.
 	 */
-	@Parameter(defaultValue = "svn", readonly = true, required = true)
+	@Parameter(property="scmtype", defaultValue = "svn", required = true)
 	private String scmtype;
 
 	/**
