@@ -3,6 +3,7 @@ package net.mfjassociates.maven.mojo;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.maven.model.Activation;
@@ -36,7 +37,9 @@ import org.codehaus.mojo.flatten.FlattenMode;
 @Mojo(name = "getinfo")
 public class SCMInfoMojo extends AbstractMojo {
 
-	private static final String NEW_POM = ".updated-pom.xml";
+	public static final String NEW_POM = ".updated-pom.xml";
+
+	private static final String SCM_INFO_PROPERTY_NAME = "scmInfo";
 
 	/**
 	 * The Maven Project.
@@ -72,6 +75,12 @@ public class SCMInfoMojo extends AbstractMojo {
 
 	}
 
+	/**
+	 * Update the SVN keyword URL filled scmInfo property into the scm url, connection and developerConnection
+	 * pom elements.  Will override what was in those elements if the scmInfo property is found.
+	 * @throws IOException
+	 * @throws MojoFailureException
+	 */
 	private void updatePom() throws IOException, MojoFailureException {
 		SUPPORTED_SCMTYPES myscmtype;
 		try {
@@ -81,23 +90,34 @@ public class SCMInfoMojo extends AbstractMojo {
 		}
 		DefaultModelReader reader = new DefaultModelReader();
 		Model m = reader.read(project.getFile(), null);
-		Scm scm = m.getScm();
-		AtomicBoolean updated = new AtomicBoolean(false);
-		if (scm != null) {
-			switch (myscmtype) {
-			case svn:
-				updateSVN(scm, updated);
-				break;
-			// default case is not required because it will fail before getting here if the
-			// scmtype is not in the enum
+		Properties p = m.getProperties();
+		if (Objects.nonNull(p)) {
+			String scmInfo=p.getProperty(SCM_INFO_PROPERTY_NAME);
+			if (Objects.nonNull(scmInfo)) {
+				Scm scm=m.getScm();
+				if (Objects.isNull(scm)) {
+					scm=new Scm();
+					m.setScm(scm);
+				}
+				scm.setUrl(scmInfo);
+				scm.setConnection(scmInfo);
+				scm.setDeveloperConnection(scmInfo);
+				AtomicBoolean updated = new AtomicBoolean(false);
+				switch (myscmtype) {
+				case svn:
+					updateSVN(scm, updated);
+					break;
+				// default case is not required because it will fail before getting here if the
+				// scmtype is not in the enum
+				}
+				DefaultModelWriter writer = new DefaultModelWriter();
+				File updatedPom = project.getFile().toPath().resolveSibling(NEW_POM).toFile();
+				writer.write(updatedPom, null, m);
+				if (isUpdatePomFile() && updated.get()) project.setPomFile(updatedPom);
+				if (updated.get())
+					getLog().info("Updated pom file for " + m.getArtifactId() + " into " + updatedPom.getName());
 			}
-			DefaultModelWriter writer = new DefaultModelWriter();
-			File updatedPom = project.getFile().toPath().resolveSibling(NEW_POM).toFile();
-			writer.write(updatedPom, null, m);
-			if (isUpdatePomFile() && updated.get()) project.setPomFile(updatedPom);
-			if (updated.get())
-				getLog().info("Updated pom file for " + m.getArtifactId() + " into " + updatedPom.getName());
-		}
+		};
 	}
 
 	private static final String SVN_START = "$URL: ";
@@ -108,7 +128,7 @@ public class SCMInfoMojo extends AbstractMojo {
 	 * trailing information and adding the scm:svn: prefix for the {@link Scm#getConnection() connection} and
 	 * {@link Scm#getDeveloperConnection() developerConnection} properties.
 	 * @param scm
-	 * @param updated whether the {@link Model#getScm() scm} information was updated or not
+	 * @param updated - indicates whether the {@link Model#getScm() scm} information was updated or not
 	 */
 	private void updateSVN(Scm scm, AtomicBoolean updated) {
 		scm.setUrl(reformat(scm.getUrl(), SVN_START, SVN_END, "", updated));

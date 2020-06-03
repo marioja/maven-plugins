@@ -28,11 +28,6 @@
 			<artifactId>maven-core</artifactId>
 			<version>3.2.5</version>
 		</dependency>
-		<dependency>
-		  <groupId>org.junit.jupiter</groupId>
-		  <artifactId>junit-jupiter-engine</artifactId>
-		  <version>5.6.0</version>
-		</dependency>
 	</dependencies>
 	<url>http://github.com/marioja/maven-plugins/</url>
 	<licenses>
@@ -48,11 +43,6 @@
 			<organizationUrl>http://github.com/marioja</organizationUrl>
 		</developer>
 	</developers>
-	<scm>
-		<connection>scm:git:git://github.com/marioja/maven-plugins.git</connection>
-		<developerConnection>scm:git:ssh://github.com:marioja/maven-plugins.git.git</developerConnection>
-		<url>http://github.com/marioja/maven-plugins/tree/master</url>
-	</scm>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -70,12 +60,7 @@
 		<name>MFJ Associates</name>
 		<url>http://www.mfjassociates.net/</url>
 	</organization>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
-      </plugin>
-    </plugins>
-  </build>
+	<properties>
+	  <scmInfo>$URL: http://svnserver/repos/app1/branches/test-scm/trunk/pom.xml $</scmInfo>
+	</properties>
 </project>
