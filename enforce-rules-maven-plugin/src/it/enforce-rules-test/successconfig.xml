@@ -1,0 +1,9 @@
+<configuration>
+	<rules>
+		<bannedDependencies>
+			<excludes>
+				<exclude>org.slf4c:slf4j-api</exclude>
+			</excludes>
+		</bannedDependencies>
+	</rules>
+</configuration>

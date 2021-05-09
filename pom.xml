@@ -1,6 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.mfjassociates.maven</groupId>
 	<artifactId>maven-plugins</artifactId>
@@ -8,23 +7,85 @@
 	<packaging>pom</packaging>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.apache.maven.plugin-tools</groupId>
-				<artifactId>maven-plugin-annotations</artifactId>
-				<version>3.4</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.maven</groupId>
-				<artifactId>maven-plugin-api</artifactId>
-				<version>3.2.5</version>
-			</dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>${maven.version}</version>
+      <scope>test</scope>
+    </dependency> 
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>${maven.plugin.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-testing</groupId>
+      <artifactId>maven-plugin-testing-harness</artifactId>
+      <version>${maven.plugin.testing.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.codehaus.groovy</groupId>
+    	<artifactId>groovy-all</artifactId>
+    	<version>2.4.21</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.twdata.maven</groupId>
+    	<artifactId>mojo-executor</artifactId>
+    	<version>2.3.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>1.7.25</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.maven</groupId>
+    	<artifactId>maven-embedder</artifactId>
+    	<version>${maven.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-lang</groupId>
+    	<artifactId>commons-lang</artifactId>
+    	<version>2.5</version>
+    </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<properties>
 		<revision>2.0</revision>
 		<sha1>0</sha1>
 		<changelist>-SNAPSHOT</changelist>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.version>3.6.3</maven.version>
+		<maven.plugin.version>3.6.1</maven.plugin.version>
+		<maven.plugin.testing.version>3.3.0</maven.plugin.testing.version>
 	</properties>
 	<url>http://github.com/marioja/maven-plugins/</url>
 	<licenses>
@@ -35,7 +96,7 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>Mario François Jauvin</name>
+			<name>Mario Fran�ois Jauvin</name>
 			<email>mfj@earthling.net</email>
 			<organizationUrl>http://github.com/marioja</organizationUrl>
 		</developer>
@@ -58,6 +119,10 @@
 	<build>
     <pluginManagement>
       <plugins>
+      	<plugin>
+      		<artifactId>maven-javadoc-plugin</artifactId>
+      		<version>3.0.1</version>
+      	</plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
@@ -101,7 +166,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -135,7 +199,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.5</version>
@@ -148,7 +212,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 	<organization>
@@ -159,5 +223,6 @@
 	<description>List of useful maven plugins</description>
 	<modules>
 		<module>scminfo-maven-plugin</module>
-	</modules>
+    <module>enforce-rules-maven-plugin</module>
+  </modules>
 </project>
