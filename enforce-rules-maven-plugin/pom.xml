@@ -173,7 +173,7 @@
 								</goals>
 								<configuration>
 									<goals>
-										<goal>net.mfjassociates.maven:enforce-rules-maven-plugin:2.0.0-SNAPSHOT:enforce-rules</goal>
+										<goal>net.mfjassociates.maven:enforce-rules-maven-plugin:${project.version}:enforce-rules</goal>
 									</goals>
 								</configuration>
 							</execution>
