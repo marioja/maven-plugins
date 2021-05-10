@@ -77,7 +77,7 @@
 		</dependencies>
 	</dependencyManagement>
 	<properties>
-		<revision>2.0</revision>
+		<revision>2.1</revision>
 		<sha1>0</sha1>
 		<changelist>-SNAPSHOT</changelist>
 		<maven.compiler.source>1.8</maven.compiler.source>
