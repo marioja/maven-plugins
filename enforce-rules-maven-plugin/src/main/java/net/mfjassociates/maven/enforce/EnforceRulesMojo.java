@@ -34,16 +34,20 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
 /**
- * Goal which touches a timestamp file.
+ * Goal which calls the maven-enforcer-plugin enforce goal to process the rules from the command line
  */
 @Mojo(name = "enforce-rules", defaultPhase = LifecyclePhase.VALIDATE)
 public class EnforceRulesMojo extends AbstractMojo {
 
     /**
-     * Plugin version to execute.
+     * maven-enforcer-plugin version to execute.
      */
     @Parameter (property="version", required = true)
     private String version;
+    
+    /**
+     * Absolute path of the XML file that contains only the maven-enforcer-plugin rules configuration 
+     */
     
     @Parameter (property="xmlConfiguration", required = true)
     private String configurationFilename;
